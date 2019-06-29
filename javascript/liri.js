@@ -12,9 +12,9 @@ var userInput = process.argv.slice(3).join("+");
 
 var action = process.argv[2];
 
-function movieThis(information){
-    
-    if(information === ""){
+function movieThis(information) {
+
+    if (information === "") {
         information = "Mr. Nobody";
         // console.log()
     }
@@ -34,51 +34,90 @@ function movieThis(information){
             // * Actors in the movie.
             // console.log(response.data);
             console.log(`Movie Title: ${data.Title}\n Year Released: ${data.Year}\n IMDB Rating: ${data.imdbRating}\n Rotten Tomatoes Rating: ${data.Ratings[1].Value}\n Country: ${data.Country}\n Language: ${data.Language}\n Plot: ${data.Plot}\n Actors: ${data.Actors}`)
-           
+
         })
         .catch(function (error) {
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log("---------------Data---------------");
-                console.log(error.response.data);
-                console.log("---------------Status---------------");
-                console.log(error.response.status);
-                console.log("---------------Status---------------");
-                console.log(error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an object that comes back with details pertaining to the error that occurred.
-                console.log(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log("Error", error.message);
-            }
-            console.log(error.config);
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
         });
-}
 
-function concertThis(information){
-    if(information === ""){
+};
+
+function concertThis(information) {
+    //     node liri.js concert-this <artist/band name here>
+
+    // This will search the Bands in Town Artist Events API ("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp") for an artist and render the following information about each event to the terminal:
+
+    // Name of the venue
+
+    // Venue location
+
+    // Date of the Event (use moment to format this as "MM/DD/YYYY")
+
+    if (information === "") {
         console.log("Please enter valid search options.")
     }
-    console.log(`You are in the concertThis ${information}`)
-}
+    // console.log(`You are in the concertThis ${information}`)
+    var queryUrl = "https://rest.bandsintown.com/artists/" + information + "/events?app_id=codingbootcamp"
+    axios.get(queryUrl).then(
+        function (response) {
+            var data = response.data
+            // console.log(data);
+            for (var i = 0; i < data.length; i++) {
+                console.log(`Venue: ${data[i].venue.name}\n City: ${data[i].venue.city}\n Date: ${data[i].datetime}`)
 
-function spotifyThis(information){
-    spotify.search({ type: 'track', query: information }, function(err, data) {
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
+        });
+
+};
+
+
+function spotifyThis(information) {
+    //     This will show the following information about the song in your terminal/bash window
+
+    // Artist(s)
+
+    // The song's name
+
+    // A preview link of the song from Spotify
+
+    // The album that the song is from
+ 
+    // If no song is provided then your program will default to "The Sign" by Ace of Base.
+    if(information === ""){
+        information = "the sign";
+    }
+
+    spotify.search({ type: 'track', query: information }, function (err, data) {
         if (err) {
-          return console.log('Error occurred: ' + err);
+            return console.log('Error occurred: ' + err);
         }
-       
-      console.log(data); })
-    console.log(`You are in the spotifyThis ${information}`)
+
+        console.log(data);
+        console.log(data.tracks.items.length);
+        console.log(`Song: ${data.tracks.items[0]}`)//.href.items[0]}\n`) 
+    })
+    // for (var i = 0; i < items.length; i++) {
+        // console.log(`Song: ${data.tracks.href.items}\n`) //City: ${data[i].venue.city}\n Date: ${data[i].datetime}`)
+
+    // }
+    // console.log(`You are in the spotifyThis ${information}`)
+
+
 }
 
-function doWhat(){
+function doWhat() {
     // console.log(`You are in the doWhat`)
-    fs.readFile("../text/random.txt", "utf8", function(error, data){
-        if(error){
+    fs.readFile("../text/random.txt", "utf8", function (error, data) {
+        if (error) {
             return console.log(error);
         }
         // console.log(data);
@@ -90,7 +129,7 @@ function doWhat(){
 }
 
 function switchAction(apiCall, information) {
-    switch(apiCall){
+    switch (apiCall) {
         case "movie-this":
             return movieThis(information);
 
@@ -102,7 +141,7 @@ function switchAction(apiCall, information) {
 
         case "do-what-it-says":
             return doWhat();
-        
+
         default:
             return console.log("Please enter valid command.")
     }
