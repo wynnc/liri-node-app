@@ -5,10 +5,14 @@ var keys = require("./keys.js");
 var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
 var fs = require("fs");
+var divider = "\n------------------------------------------------------------\n\n";
+var logInfo = "";
+
 // axios call for band api "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
 // var movie = process.argv.slice(2).join("+");
 
 var userInput = process.argv.slice(3).join("+");
+console.log(userInput);
 
 var action = process.argv[2];
 
@@ -90,9 +94,9 @@ function spotifyThis(information) {
     // A preview link of the song from Spotify
 
     // The album that the song is from
- 
+
     // If no song is provided then your program will default to "The Sign" by Ace of Base.
-    if(information === ""){
+    if (information === "") {
         information = "the sign";
     }
 
@@ -100,18 +104,17 @@ function spotifyThis(information) {
         if (err) {
             return console.log('Error occurred: ' + err);
         }
+        // console.log(data.tracks.items[0].artists[0].name);
 
-        console.log(data);
-        console.log(data.tracks.items.length);
-        console.log(`Song: ${data.tracks.items[0]}`)//.href.items[0]}\n`) 
+        for (var i = 0; i < 1; i++) {
+            var info = data.tracks;
+
+            infoLog = `Artist: ${info.items[i].artists[i].name}\n\nSong Title: ${info.items[i].name}\n\nSpotify Preview Link: ${info.items[i].preview_url}\n\nSong Album: ${info.items[i].album.name}`
+
+            console.log(infoLog);
+
+        }
     })
-    // for (var i = 0; i < items.length; i++) {
-        // console.log(`Song: ${data.tracks.href.items}\n`) //City: ${data[i].venue.city}\n Date: ${data[i].datetime}`)
-
-    // }
-    // console.log(`You are in the spotifyThis ${information}`)
-
-
 }
 
 function doWhat() {
@@ -134,6 +137,9 @@ function switchAction(apiCall, information) {
             return movieThis(information);
 
         case "spotify-this-song":
+            // console.log(information);
+            var information = information.replace("+", " ");
+            // console.log(information);
             return spotifyThis(information);
 
         case "concert-this":
@@ -149,3 +155,9 @@ function switchAction(apiCall, information) {
 
 switchAction(action, userInput);
 
+function logFile(logInfo){
+fs.appendFile("log.txt", actorData + divider, function(err) {
+    if (err) throw err;
+    console.log(actorData);
+  })
+}
