@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+
 var axios = require("axios");
 var keys = require("./keys.js");
 var Spotify = require("node-spotify-api");
@@ -12,7 +13,7 @@ var logInfo = "";
 // var movie = process.argv.slice(2).join("+");
 
 var userInput = process.argv.slice(3).join("+");
-console.log(userInput);
+// console.log(userInput);
 
 var action = process.argv[2];
 
